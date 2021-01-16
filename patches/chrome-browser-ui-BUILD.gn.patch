@@ -1,8 +1,16 @@
 diff --git a/chrome/browser/ui/BUILD.gn b/chrome/browser/ui/BUILD.gn
-index b89946d77d8d9c74a58b1170d1e2e788e0746fbb..1f1c64e9a85607314b9fbcf4a739d0dc4df8d5e9 100644
+index 91bb3832b7efdc317875db18ec4b8a8965458ba6..6b65dc7cd37003ac5abd86d669621bdfad9608c5 100644
 --- a/chrome/browser/ui/BUILD.gn
 +++ b/chrome/browser/ui/BUILD.gn
-@@ -586,6 +586,7 @@ static_library("ui") {
+@@ -329,6 +329,7 @@ static_library("ui") {
+   # have the same dependencies. Once browser_ui is untangled from
+   # browser, then we can clean up these dependencies.
+   public_deps = [
++    "//brave/vendor/bat-native-ledger/",
+     "//chrome/services/machine_learning:machine_learning_tflite_buildflags",
+     "//components/dom_distiller/core",
+     "//components/safe_browsing:buildflags",
+@@ -580,6 +581,7 @@ static_library("ui") {
      "//ui/webui/resources/cr_components/customize_themes:mojom",
      "//v8:v8_version",
    ]
@@ -10,7 +18,7 @@ index b89946d77d8d9c74a58b1170d1e2e788e0746fbb..1f1c64e9a85607314b9fbcf4a739d0dc
    allow_circular_includes_from +=
        [ "//chrome/browser/ui/webui/bluetooth_internals" ]
  
-@@ -3288,10 +3289,13 @@ static_library("ui") {
+@@ -3214,10 +3216,13 @@ static_library("ui") {
        ]
        deps += [ "//google_update" ]
      } else {
