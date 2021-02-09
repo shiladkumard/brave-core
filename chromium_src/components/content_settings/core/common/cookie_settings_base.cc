@@ -27,8 +27,6 @@ constexpr char kSonyentertainmentnetwork[] =
     "https://[*.]sonyentertainmentnetwork.com/*";
 constexpr char kUbisoft[] = "https://[*.]ubisoft.com/*";
 constexpr char kUbi[] = "https://[*.]ubi.com/*";
-constexpr char kAmericanexpress[] = "https://[*.]americanexpress.com/*";
-constexpr char kAexp[] = "https://[*.]aexp-static.com/*";
 constexpr char kSony[] = "https://[*.]sony.com/*";
 constexpr char kGoogle[] = "https://[*.]google.com/*";
 constexpr char kGoogleusercontent[] = "https://[*.]googleusercontent.com/*";
@@ -59,11 +57,7 @@ bool BraveIsAllowedThirdParty(const GURL& url,
            {ContentSettingsPattern::FromString(kUbisoft),
             ContentSettingsPattern::FromString(kUbi)},
            {ContentSettingsPattern::FromString(kUbi),
-            ContentSettingsPattern::FromString(kUbisoft)},
-           {ContentSettingsPattern::FromString(kAmericanexpress),
-            ContentSettingsPattern::FromString(kAexp)},
-           {ContentSettingsPattern::FromString(kAexp),
-            ContentSettingsPattern::FromString(kAmericanexpress)}});
+            ContentSettingsPattern::FromString(kUbisoft)}});
 
   if (net::registry_controlled_domains::GetDomainAndRegistry(
           url, net::registry_controlled_domains::INCLUDE_PRIVATE_REGISTRIES) ==
