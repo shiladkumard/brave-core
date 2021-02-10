@@ -18,9 +18,11 @@ struct ConversionQueueItemInfo {
   ConversionQueueItemInfo(const ConversionQueueItemInfo& info);
   ~ConversionQueueItemInfo();
 
-  uint64_t timestamp_in_seconds = 0;
-  std::string creative_instance_id;
+  std::string campaign_id;
   std::string creative_set_id;
+  std::string creative_instance_id;
+  std::string advertiser_id;
+  int64_t timestamp = 0;
 
   bool IsValid() const;
 };

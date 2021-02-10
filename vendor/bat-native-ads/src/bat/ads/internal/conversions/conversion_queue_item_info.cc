@@ -15,7 +15,8 @@ ConversionQueueItemInfo::ConversionQueueItemInfo(
 ConversionQueueItemInfo::~ConversionQueueItemInfo() = default;
 
 bool ConversionQueueItemInfo::IsValid() const {
-  if (creative_instance_id.empty() || creative_set_id.empty()) {
+  if (campaign_id.empty() || creative_set_id.empty() ||
+      creative_instance_id.empty() || advertiser_id.empty() || timestamp == 0) {
     return false;
   }
 
