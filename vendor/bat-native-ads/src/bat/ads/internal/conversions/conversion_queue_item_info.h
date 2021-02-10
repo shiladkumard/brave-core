@@ -22,6 +22,9 @@ struct ConversionQueueItemInfo {
   std::string creative_instance_id;
   std::string creative_set_id;
 
+  // TODO(Moritz Haller): add conversion ID
+  // move queue to DB (Terry will move this data structure to database PR)
+
   bool IsValid() const;
 };
 

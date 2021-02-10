@@ -12,6 +12,10 @@
 #include <set>
 #include <utility>
 
+// TODO(Moritz Haller): Move when splitting out functionality
+#include "bat/ads/internal/security/security_util.h"
+#include "third_party/re2/src/re2/re2.h"
+
 #include "base/json/json_reader.h"
 #include "base/json/json_writer.h"
 #include "base/strings/string_number_conversions.h"
@@ -23,6 +27,8 @@
 #include "bat/ads/internal/database/tables/ad_events_database_table.h"
 #include "bat/ads/internal/database/tables/conversions_database_table.h"
 #include "bat/ads/internal/logging.h"
+// TODO(Moritz Haller): better include via security_util.h?
+#include "bat/ads/internal/security/conversion_id_info.h"
 #include "bat/ads/internal/time_formatting_util.h"
 #include "bat/ads/internal/url_util.h"
 #include "bat/ads/pref_names.h"
@@ -80,7 +86,8 @@ void Conversions::Initialize(InitializeCallback callback) {
   Load();
 }
 
-void Conversions::MaybeConvert(const std::vector<std::string>& redirect_chain) {
+void Conversions::MaybeConvert(const std::vector<std::string>& redirect_chain,
+                               const std::string& html) {
   DCHECK(is_initialized_);
 
   if (!ShouldAllow()) {
@@ -94,7 +101,30 @@ void Conversions::MaybeConvert(const std::vector<std::string>& redirect_chain) {
     return;
   }
 
-  CheckRedirectChain(redirect_chain);
+  // TODO(Moritz Haller): get from catalog
+  const std::string advertiser_public_key =
+      "ofIveUY/bM7qlL9eIkAv/xbjDItFs1xRTTYKRZZsPHI=";
+
+  // TODO(Moritz Haller): pull out into function
+  re2::StringPiece text_string_piece(html);
+  RE2 r("<meta.*name=\"ad-conversion-id\".*content=\"(.*)\".*>");
+
+  // TODO(Moritz Haller): Rename, e.g. `vac_id` or `advertiser_conversion_id`
+  std::string conversion_id;
+  RE2::FindAndConsume(&text_string_piece, r, &conversion_id);
+
+  BLOG(1, "DEBUG conversion_id: " << conversion_id);
+
+  // TODO(Moritz Haller): Encrypt
+  auto envelope = security::EncryptAndEncodeConversionId(conversion_id,
+                                                         advertiser_public_key);
+
+  BLOG(1, "DEBUG encrypted conversion_id:\n"
+              << "ciphertext: '" << envelope.ciphertext << "',\n"
+              << "epk: '" << envelope.ephemeral_pk << "',\n"
+              << "nonce: '" << envelope.nonce);
+
+  CheckRedirectChain(redirect_chain, conversion_id);
 }
 
 void Conversions::StartTimerIfReady() {
@@ -121,7 +151,8 @@ bool Conversions::ShouldAllow() const {
 }
 
 void Conversions::CheckRedirectChain(
-    const std::vector<std::string>& redirect_chain) {
+    const std::vector<std::string>& redirect_chain,
+    const std::string& conversion_id) {
   BLOG(1, "Checking URL for conversions");
 
   database::table::AdEvents ad_events_database_table;
@@ -204,7 +235,7 @@ void Conversions::CheckRedirectChain(
 
           creative_set_ids.insert(ad_event.creative_set_id);
 
-          Convert(ad_event);
+          Convert(ad_event, conversion_id);
 
           converted = true;
         }
@@ -217,12 +248,13 @@ void Conversions::CheckRedirectChain(
   });
 }
 
-void Conversions::Convert(const AdEventInfo& ad_event) {
+void Conversions::Convert(const AdEventInfo& ad_event,
+                          const std::string& conversion_id) {
   BLOG(1, "Conversion for creative set id " << ad_event.creative_set_id
                                             << " and "
                                             << std::string(ad_event.type));
 
-  AddItemToQueue(ad_event);
+  AddItemToQueue(ad_event, conversion_id);
 }
 
 ConversionList Conversions::FilterConversions(
@@ -259,8 +291,12 @@ ConversionList Conversions::SortConversions(const ConversionList& conversions) {
   return sort->Apply(conversions);
 }
 
-void Conversions::AddItemToQueue(const AdEventInfo& ad_event) {
+void Conversions::AddItemToQueue(const AdEventInfo& ad_event,
+                                 const std::string& conversion_id) {
   DCHECK(is_initialized_);
+
+  // TODO(Moritz Haller): What if conversion_id is empty?
+  // Check here or upstream?
 
   AdEventInfo conversion_ad_event;
   conversion_ad_event.type = ad_event.type;
