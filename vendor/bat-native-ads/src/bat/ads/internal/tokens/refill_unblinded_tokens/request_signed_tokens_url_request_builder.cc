@@ -13,9 +13,9 @@
 #include "base/strings/stringprintf.h"
 #include "base/values.h"
 #include "bat/ads/internal/logging.h"
-#include "bat/ads/internal/rpill/rpill.h"
 #include "bat/ads/internal/security/security_util.h"
 #include "bat/ads/internal/server/confirmations_server_util.h"
+#include "bat/ads/internal/server/via_header_util.h"
 
 namespace ads {
 
@@ -69,7 +69,7 @@ std::vector<std::string> RequestSignedTokensUrlRequestBuilder::BuildHeaders(
   const std::string content_type_header = "content-type: application/json";
   headers.push_back(content_type_header);
 
-  const std::string via_header = BuildViaHeader();
+  const std::string via_header = server::BuildViaHeader();
   headers.push_back(via_header);
 
   const std::string accept_header = "accept: application/json";
@@ -96,14 +96,6 @@ std::string RequestSignedTokensUrlRequestBuilder::BuildSignatureHeaderValue(
 
   return security::Sign({{"digest", digest_header_value}}, "primary",
                         wallet_.secret_key);
-}
-
-std::string RequestSignedTokensUrlRequestBuilder::BuildViaHeader() const {
-  if (IsUncertainFuture()) {
-    return "Via: 1.1 brave, 1.1 ads-serve.brave.com (Apache/1.1)";
-  }
-
-  return "Via: 1.0 brave, 1.1 ads-serve.brave.com (Apache/1.1)";
 }
 
 std::string RequestSignedTokensUrlRequestBuilder::BuildBody() const {
