@@ -452,3 +452,38 @@ export const ToggleCardsSwitch = styled<{}, 'div'>('div')`
   float: right;
   margin: -65px -10px 0 0;
 `
+
+export const StyledTopSitesCustomizationSettings = styled('div')`
+  --widget-gap: 10px;
+  font-family: ${p => p.theme.fontFamily.heading};
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  gap: var(--widget-gap)
+`
+
+export const StyledTopSitesCustomizationSettingsOption = styled<{}, 'div'>('div')`
+  width: calc(50% - var(--widget-gap) / 2);
+  display: flex;
+  flex-direction: column;
+`
+
+export const StyledTopSitesCustomizationImage = styled<{}, 'img'>('img')`
+  width: 100%;
+  margin-bottom: 8px;
+  cursor: pointer;
+`
+
+export const StyledTopSitesCustomizationOptionTitle = styled<{}, 'div'>('div')`
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 2px;
+`
+
+export const StyledTopSitesCustomizationOptionDesc = styled<{}, 'div'>('div')`
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 17px;
+`
