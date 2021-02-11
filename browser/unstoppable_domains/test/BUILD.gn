@@ -28,3 +28,21 @@ source_set("browser_tests") {
     ]
   }  # if (unstoppable_domains_enabled)
 }  # source_set("browser_tests") {
+
+source_set("unit_tests") {
+  testonly = true
+  if (unstoppable_domains_enabled) {
+    sources = [
+      "//brave/browser/unstoppable_domains/test/utils_unittest.cc",
+      "//net/dns/dns_transaction_unittest.cc",
+    ]
+
+    deps = [
+      "//base/test:test_support",
+      "//brave/components/unstoppable_domains",
+      "//chrome/test:test_support",
+      "//components/prefs",
+      "//testing/gtest",
+    ]
+  }  # if (unstoppable_domains_enabled)
+}  # source_set("unit_tests")
