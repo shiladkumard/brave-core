@@ -203,8 +203,7 @@ BATClassAdsBridge(BOOL, isDebug, setDebug, g_is_debug)
 
 + (void)setSysInfo:(BATBraveAdsSysInfo *)sysInfo
 {
-  ads::g_sys_info.manufacturer = sysInfo.manufacturer.UTF8String;
-  ads::g_sys_info.model = sysInfo.model.UTF8String;
+  ads::g_sys_info.is_uncertain_future = sysInfo.is_uncertain_future;
 }
 
 + (BATBraveAdsBuildChannel *)buildChannel
