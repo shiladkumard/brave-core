@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "base/bind.h"
-#include "base/threading/thread_task_runner_handle.h"
+#include "base/threading/sequenced_task_runner_handle.h"
 #include "brave/components/unstoppable_domains/unstoppable_domains_interstitial_controller_client.h"
 #include "brave/components/unstoppable_domains/unstoppable_domains_opt_in_page.h"
 #include "brave/components/unstoppable_domains/utils.h"
@@ -57,7 +57,7 @@ UnstoppableDomainsNavigationThrottle::WillStartRequest() {
     return content::NavigationThrottle::PROCEED;
   }
 
-  base::ThreadTaskRunnerHandle::Get()->PostTask(
+  base::SequencedTaskRunnerHandle::Get()->PostTask(
       FROM_HERE,
       base::BindOnce(&UnstoppableDomainsNavigationThrottle::ShowInterstitial,
                      weak_ptr_factory_.GetWeakPtr()));
