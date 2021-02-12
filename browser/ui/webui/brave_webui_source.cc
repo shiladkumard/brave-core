@@ -881,6 +881,7 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "install_and_launch", IDS_IPFS_INSTALL_AND_LAUNCH },
         { "open_webui", IDS_IPFS_OPEN_WEBUI },
         { "peers_details_link", IDS_IPFS_PEERS_DETAILS_LINK },
+        { "installing", IDS_IPFS_INSTALLING },
       }
     }, {
 #endif
