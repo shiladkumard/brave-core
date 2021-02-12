@@ -18,6 +18,7 @@ import("//brave/components/greaselion/browser/buildflags/buildflags.gni")
 import("//brave/components/ipfs/buildflags/buildflags.gni")
 import("//brave/components/speedreader/buildflags.gni")
 import("//brave/components/tor/buildflags/buildflags.gni")
+import("//brave/components/unstoppable_domains/buildflags/buildflags.gni")
 import("//brave/test/testing.gni")
 import("//chrome/common/features.gni")
 import("//components/gcm_driver/config.gni")
@@ -136,7 +137,6 @@ test("brave_unit_tests") {
     "//brave/browser/tor:unit_tests",
     "//brave/browser/translate/buildflags",
     "//brave/browser/ui",
-    "//brave/browser/unstoppable_domains/test:unit_tests",
     "//brave/browser/widevine:unittest",
     "//brave/common:network_constants",
     "//brave/common:pref_names",
@@ -197,6 +197,10 @@ test("brave_unit_tests") {
     "//services/network/public/cpp",
     "//services/preferences/public/cpp",
   ]
+
+  if (unstoppable_domains_enabled) {
+    deps += [ "//brave/browser/unstoppable_domains/test:unit_tests" ]
+  }
 
   if (toolkit_views) {
     deps += [ "//chrome/browser/ui/views" ]
@@ -620,7 +624,6 @@ if (!is_android) {
       "//brave/browser/tor:browser_tests",
       "//brave/browser/ui/sidebar:browser_tests",
       "//brave/browser/ui/tabs/test:browser_tests",
-      "//brave/browser/unstoppable_domains/test:browser_tests",
       "//brave/browser/widevine:browser_tests",
       "//brave/chromium_src/third_party/blink/renderer/modules:browser_tests",
       "//brave/components/ipfs/test:brave_ipfs_browser_tests",
@@ -628,6 +631,10 @@ if (!is_android) {
       "//media:test_support",
       "//testing/gmock",
     ]
+
+    if (unstoppable_domains_enabled) {
+      deps += [ "//brave/browser/unstoppable_domains/test:browser_tests" ]
+    }
 
     if (enable_brave_perf_predictor) {
       sources += [ "//brave/components/brave_perf_predictor/browser/perf_predictor_tab_helper_browsertest.cc" ]
